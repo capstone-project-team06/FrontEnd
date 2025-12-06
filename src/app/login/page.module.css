@@ -1,0 +1,101 @@
+.mainContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    /* background-color: #f8f9fa; */
+    /* 배경색을 약간 다르게 설정 */
+}
+
+.loginBox {
+    width: 100%;
+    max-width: 400px;
+    /* 로그인 박스 최대 너비 */
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.title a {
+    font-size: 36px;
+    font-weight: 700;
+    color: #2c2c2c;
+    text-decoration: none;
+    margin-bottom: 30px;
+    display: inline-block;
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    /* 아이템을 세로로 정렬 */
+    gap: 15px;
+    /* 입력 필드 사이의 간격 */
+    margin-bottom: 20px;
+}
+
+.inputField {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    box-sizing: border-box;
+    /* 패딩과 테두리를 너비에 포함 */
+    background-color: #FFFFFF;
+    /* 입력 필드 배경은 흰색 유지 */
+}
+
+.loginButton,
+.signupButton {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #8D7B68;
+    /* 포인트 컬러: 웜 브라운 */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.loginButton:hover,
+.signupButton:hover {
+    background-color: #695E51;
+    /* 호버 시 더 어두운 브라운 */
+}
+
+.links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    font-size: 14px;
+}
+
+.links a {
+    color: #A4907C;
+    /* 링크 색상을 톤 다운된 베이지로 */
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+.links span {
+    color: #ced4da;
+}
+
+.errorMessage {
+    color: #fa5252;
+    font-size: 14px;
+    margin: -5px 0 10px;
+    /* 위아래 간격 조정 */
+    text-align: left;
+}

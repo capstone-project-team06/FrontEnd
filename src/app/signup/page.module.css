@@ -1,0 +1,206 @@
+.mainContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px 0;
+    /* 페이지가 길어질 경우를 대비한 상하 패딩 */
+    /* background-color: #f8f9fa; */
+}
+
+.signupBox {
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.title a {
+    font-size: 36px;
+    font-weight: 700;
+    color: #2c2c2c;
+    text-decoration: none;
+    margin-bottom: 30px;
+    display: inline-block;
+}
+
+.signupForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.inputField {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border: 1px solid #EAE3D9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #FFFFFF;
+    /* 배경색 명시 */
+    color: #4A443F;
+    /* 글자색 명시 */
+}
+
+.inputField:focus {
+    outline: none;
+    border-color: #8D7B68;
+    box-shadow: 0 0 0 2px rgba(141, 123, 104, 0.2);
+}
+
+/* ▼ 키/몸무게 묶음 */
+.inputGroup {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.inputFieldHalf {
+    width: 50%;
+    /* flex-grow: 1; 대신 50%로 명시 */
+    flex-grow: 1;
+}
+
+/* number input의 스피너 제거 (선택 사항) */
+.inputField[type="number"]::-webkit-inner-spin-button,
+.inputField[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.inputField[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* ▼ 선호 룩 섹션 */
+.formSection {
+    width: 100%;
+    margin-top: 10px;
+    padding-top: 20px;
+    border-top: 1px solid #EAE3D9;
+}
+
+.sectionTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #8D7B68;
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.checkboxGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* 2열 그리드 */
+    gap: 12px;
+}
+
+.checkboxWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    color: #4A443F;
+}
+
+.checkboxInput {
+    width: 16px;
+    height: 16px;
+    accent-color: #8D7B68;
+    /* 체크박스 색상 테마에 맞춤 */
+}
+
+.otherInputWrapper {
+    grid-column: 1 / -1;
+    /* '기타' 항목은 2열 모두 차지 */
+}
+
+.otherInput {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 15px;
+    border: 1px solid #EAE3D9;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    color: #4A443F;
+}
+
+.otherInput:focus {
+    outline: none;
+    border-color: #8D7B68;
+}
+
+.fullWidth {
+    grid-column: 1 / -1;
+    /* '모르겠음' 항목도 2열 모두 차지 */
+}
+
+/*  에러 메시지 스타일 ▼ */
+.errorMessage {
+    color: #fa5252;
+    font-size: 14px;
+    margin: -5px 0 10px;
+    /* 입력칸과 이름칸 사이 */
+    text-align: left;
+}
+
+/* ▼ 색상 원 스타일 */
+.colorCircle {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 6px;
+    /* 텍스트와의 간격 */
+    border: 1px solid #EAE3D9;
+    /* 화이트 색상이 배경과 구분되도록 테두리 추가 */
+    flex-shrink: 0;
+    /* 화면이 작아져도 원이 찌그러지지 않게 */
+}
+
+.signupButton {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #8D7B68;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+    /* 입력 필드와 버튼 사이 간격 추가 */
+}
+
+.signupButton:hover {
+    background-color: #695E51;
+}
+
+.links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.links span {
+    color: #868e96;
+}
+
+.links a {
+    color: #8D7B68;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}

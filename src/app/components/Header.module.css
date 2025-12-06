@@ -1,0 +1,39 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #ffffff;
+    /* 배경 질감과 분리되도록 흰색 배경 */
+    border-bottom: 1px solid #EAE3D9;
+    /* 테마에 맞는 옅은 구분선 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    /* 은은한 그림자 */
+    position: relative;
+    z-index: 10;
+    /* 다른 요소보다 위에 오도록 설정 */
+}
+
+.logo a {
+    font-size: 24px;
+    font-weight: 700;
+    color: #4A443F;
+    text-decoration: none;
+}
+
+.navLinks {
+    display: flex;
+    gap: 25px;
+}
+
+.navLinks a {
+    font-size: 16px;
+    font-weight: 500;
+    color: #695E51;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.navLinks a:hover {
+    color: #8D7B68;
+}

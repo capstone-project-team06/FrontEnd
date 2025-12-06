@@ -1,0 +1,166 @@
+.mainContainer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    min-height: 100vh;
+    padding: 60px 20px;
+    box-sizing: border-box;
+}
+
+.mypageBox {
+    width: 100%;
+    max-width: 600px;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #4A443F;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* 섹션 그룹 스타일 */
+.formGroup {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #EAE3D9;
+}
+
+.passwordGroup {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.sectionHeader h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #8D7B68;
+    margin-bottom: 20px;
+}
+
+/* 서브 섹션 (룩, 색상, 핏) 스타일 */
+.subSection {
+    margin-top: 25px;
+}
+
+.subSection h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #695E51;
+    margin-bottom: 12px;
+}
+
+/* 입력 필드 스타일 */
+.inputField,
+.inputFieldReadOnly {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border: 1px solid #EAE3D9;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+    color: #4A443F;
+}
+
+.inputFieldReadOnly {
+    background-color: #F5F5F5;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.inputGroup {
+    display: flex;
+    gap: 10px;
+}
+
+.inputFieldHalf {
+    width: 50%;
+}
+
+/* 체크박스 그리드 스타일 (회원가입과 동일) */
+.checkboxGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.checkboxWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #4A443F;
+    cursor: pointer;
+}
+
+.checkboxInput {
+    accent-color: #8D7B68;
+    width: 16px;
+    height: 16px;
+}
+
+.fullWidth {
+    grid-column: 1 / -1;
+}
+
+.otherInputWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.otherInput {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #EAE3D9;
+    border-radius: 4px;
+}
+
+.colorCircle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    display: inline-block;
+}
+
+/* 버튼 스타일 */
+.saveButton,
+.passwordButton {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    background-color: #8D7B68;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.2s;
+}
+
+.passwordButton {
+    background-color: #695E51;
+    /* 비밀번호 변경 버튼은 조금 더 진하게 */
+}
+
+.saveButton:hover,
+.passwordButton:hover {
+    opacity: 0.9;
+}
+
+.errorMessage {
+    color: #fa5252;
+    font-size: 13px;
+    margin-top: -8px;
+    margin-bottom: 10px;
+}

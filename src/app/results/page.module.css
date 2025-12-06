@@ -1,0 +1,170 @@
+.mainContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+    padding: 60px 20px;
+    /* background-color: #F9F7F3; */
+    /* 전역 스타일과 동일하게 설정 */
+    box-sizing: border-box;
+}
+
+.contentWrapper {
+    width: 100%;
+    max-width: 960px;
+    text-align: center;
+}
+
+/* 로딩 & 에러 박스 */
+.loadingBox,
+.errorBox {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.backButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.pageTitle {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.summaryBox {
+    background-color: #F1ECE4;
+    /* 요약 박스 배경을 연한 베이지로 */
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.summaryBox p {
+    font-size: 18px;
+    color: #4A443F;
+    /* 기본 텍스트 색상 */
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* 셀럽 섹션 (새로 추가됨) */
+.celebritySection {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 60px;
+    background-color: #fff;
+    border: 1px solid #eee;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.celebImageWrapper {
+    flex-shrink: 0;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #f0f0f0;
+}
+
+.celebImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.celebInfo h2 {
+    font-size: 24px;
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.celebInfo h2 span {
+    color: #8D7B68;
+    /* 포인트 컬러 */
+}
+
+.outfitDescription {
+    font-size: 18px;
+    color: #555;
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
+.styleTags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    background-color: #f1f3f5;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #495057;
+}
+
+/* 추천 아이템 그리드 */
+.gridTitle {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.resultsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    text-align: left;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.cardImage {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    background-color: #f1f3f5;
+}
+
+.cardContent {
+    padding: 20px;
+}
+
+.cardTitle {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+}
+
+.cardDescription {
+    font-size: 15px;
+    color: #495057;
+    margin: 0;
+    line-height: 1.5;
+}

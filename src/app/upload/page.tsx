@@ -1,0 +1,376 @@
+'use client';
+
+import { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import styles from './page.module.css';
+
+// ... (UploadBox 컴포넌트는 이전과 동일)
+function UploadBox({ title, file, setFile }) {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]);
+        }
+    };
+
+    const handleBoxClick = () => {
+        inputRef.current?.click();
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); };
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            setFile(e.dataTransfer.files[0]);
+        }
+    };
+
+    return (
+        <div className={styles.uploadBox}>
+            <h2 className={styles.boxTitle}>{title}</h2>
+            <div
+                className={styles.dropZone}
+                onClick={handleBoxClick}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+            >
+                <input type="file" accept="image/*" ref={inputRef} onChange={handleFileChange} style={{ display: 'none' }} />
+                {file ? (
+                    <img src={URL.createObjectURL(file)} alt="Preview" className={styles.previewImage} />
+                ) : (
+                    <div className={styles.prompt}>
+                        <p>이곳을 클릭하거나<br />사진을 드래그 앤 드롭하세요</p>
+                        <span className={styles.guidelineLink}>사진 가이드라인 보기</span>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+// 옷 종류 데이터 구조
+const clothingData = {
+    '상의': ['반팔티', '긴팔티', '맨투맨', '니트', '긴팔 셔츠', '반팔 셔츠', '후드티', '민소매', '카라 티셔츠'],
+    '하의': ['스웨트 팬츠', '데님 팬츠', '슬랙스', '치노 팬츠', '린넨 팬츠', '나일론 팬츠', '코듀로이 팬츠'],
+    '아우터': ['가디건', '데님 자켓', '스웨이드 자켓', '가죽 자켓', '패딩', '코트', '바람막이', '후드집업', '블레이저', '밀리터리 자켓', '무스탕', '플리스']
+};
+const mainCategories = Object.keys(clothingData);
+
+
+
+// ▼▼▼ [추가] 한글 -> 영어 변환 맵 (백엔드 명세에 맞춰 수정 필수!) ▼▼▼
+const categoryMap: { [key: string]: string } = {
+    // 메인 카테고리
+    '상의': 'top',
+    '하의': 'bottom',
+    '아우터': 'outer',
+
+    // 서브 카테고리 (상의)
+    '반팔티': 'short_sleeve',
+    '긴팔티': 'long_sleeve',
+    '맨투맨': 'sweatshirt',
+    '니트': 'knit',
+    '긴팔 셔츠': 'long_sleeve_shirt',
+    '반팔 셔츠': 'short_sleeve_shirt',
+    '후드티': 'hoodie',
+    '민소매': 'sleeveless',
+    '카라 티셔츠': 'collar_tshirt',
+
+    // 서브 카테고리 (하의)
+    '스웨트 팬츠': 'sweat_pants',
+    '데님 팬츠': 'denim_pants',
+    '슬랙스': 'slacks',
+    '치노 팬츠': 'chino_pants',
+    '나일론 팬츠': 'nylon_pants',
+    '코듀로이 팬츠': 'corduroy_pants',
+
+    // 서브 카테고리 (아우터)
+    '가디건': 'cardigan',
+    '데님 자켓': 'denim_jacket',
+    '나일론 자켓': 'nylon_jacket',
+    '스웨이드 자켓': 'suede_jacket',
+    '가죽 자켓': 'leather_jacket',
+    '패딩': 'padded_jacket',
+    '코트': 'coat',
+    '바람막이': 'windbreaker',
+    '후드집업': 'zip_up_hoodie',
+    '블레이저': 'blazer',
+    '무스탕': 'shearling_jacket',
+    '플리스': 'fleece_jacket'
+};
+
+
+
+export default function UploadPage() {
+    const router = useRouter();
+    const [faceFile, setFaceFile] = useState<File | null>(null);
+    const [bodyFile, setBodyFile] = useState<File | null>(null);
+
+    // State 변경: 선택 항목을 객체로 관리
+    // e.g., { '상의': '맨투맨', '하의': '데님 팬츠' }
+    const [selectedItems, setSelectedItems] = useState<{ [key: string]: string | null }>({});
+    const [situationPrompt, setSituationPrompt] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [apiError, setApiError] = useState('');
+
+    // 버튼 활성화 조건: 최소 1개의 서브 카테고리가 선택되었는지 확인
+    // const isSelectionMade = Object.values(selectedItems).some(subCat => subCat !== null);
+    const isButtonDisabled = !faceFile || !bodyFile || isLoading;
+
+    // ▼ 메인 카테고리 토글(On/Off) 핸들러
+    const handleMainCategoryToggle = (category: string) => {
+        setSelectedItems(prev => {
+            const newItems = { ...prev };
+            if (newItems.hasOwnProperty(category)) {
+                // 이미 선택된(활성화된) 상태면, 항목 자체를 삭제 (토글 Off)
+                delete newItems[category];
+            } else {
+                // 비활성화 상태면, 항목을 추가하고 서브 카테고리는 null로 설정 (토글 On)
+                newItems[category] = null;
+            }
+            return newItems;
+        });
+    };
+
+    // ▼ 서브 카테고리 선택 핸들러
+    const handleSubCategorySelect = (mainCat: string, subCat: string) => {
+        setSelectedItems(prev => ({
+            ...prev,
+            // 해당 메인 카테고리의 값으로 서브 카테고리를 할당
+            // 이미 선택된 서브 카테고리를 다시 누르면 null로 변경 (선택 해제)
+            [mainCat]: prev[mainCat] === subCat ? null : subCat
+        }));
+    };
+
+    const handleAnalysis = async () => {
+        if (isButtonDisabled) return;
+        setIsLoading(true);
+        setApiError('');
+
+        // 브라우저에 저장된 토큰 가져오기
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            setApiError('로그인이 필요합니다. 다시 로그인해주세요.');
+            setIsLoading(false);
+            // router.push('/login'); // 로그인 페이지로 쫓아내기
+            return;
+        }
+
+        // 텍스트 데이터 포맷팅
+        // const selectionString = Object.entries(selectedItems)
+        //     .filter(([_, subCat]) => subCat !== null)
+        //     .map(([mainCat, subCat]) => `${mainCat}: ${subCat}`)
+        //     .join(', ');
+
+        // const analysisRequest = {
+        //     clothingType: selectionString,
+        //     situation: situationPrompt
+        // };
+
+        // 파일과 텍스트를 FormData에 담기
+        // const formData = new FormData();
+        // formData.append('faceImage', faceFile!); // (faceFile이 null이 아님을 보장)
+        // formData.append('bodyImage', bodyFile!); // (bodyFile이 null이 아님을 보장)
+        // formData.append('requestData', JSON.stringify(analysisRequest)); // JSON을 문자열로 변환하여 첨부
+
+        try {
+            // 🚀 STEP 1: 사진 업로드 및 분석 요청
+            const formData = new FormData();
+            formData.append('face_image', faceFile!);
+            formData.append('body_image', bodyFile!);
+
+            const imageRes = await fetch('https://fit-me-up.p-e.kr/account/images/analyze-upload/', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData,
+            });
+
+            if (!imageRes.ok) {
+                const err = await imageRes.json();
+                throw new Error(err.detail || '사진 분석 요청 실패');
+            }
+
+            const imageResponseData = await imageRes.json();
+            const analysisData = imageResponseData.analysis; // 분석 결과 (체형, 퍼스널컬러 등)
+
+
+            // 🚀 STEP 2: 온보딩(선호도/상황) 정보 저장 요청
+            // selectedItems 상태를 백엔드 요구 포맷(Array)으로 변환
+            // ▼▼▼ [수정] 한글 선택값을 영어 코드로 변환 ▼▼▼
+            const mainCatsArray = Object.keys(selectedItems).map(korName => {
+                return categoryMap[korName] || korName; // 맵에 없으면 그냥 한글 보냄
+            });
+
+            const subCatsArray = Object.values(selectedItems)
+                .filter(val => val !== null)
+                .map(korName => {
+                    return categoryMap[korName!] || korName;
+                });
+
+            const preferenceBody = {
+                main_categories: mainCatsArray,
+                sub_categories: subCatsArray,
+                situation: situationPrompt
+            };
+
+            console.log("온보딩 전송 데이터:", preferenceBody); // 콘솔에서 데이터 확인
+
+            const prefRes = await fetch('https://fit-me-up.p-e.kr/recommendation/requests/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json' // JSON 전송 시 필수
+                },
+                body: JSON.stringify(preferenceBody),
+            });
+
+            if (!prefRes.ok) {
+                // 사진 분석은 성공했지만 온보딩 저장이 실패한 경우
+                // 에러를 띄울지, 아니면 그냥 넘어갈지 결정해야 합니다. 여기서는 에러로 처리합니다.
+                const err = await prefRes.json();
+                console.error('온보딩 저장 실패:', err);
+                throw new Error(`선호 정보 저장 실패: ${JSON.stringify(err)}`);
+            } else {
+                console.log('온보딩 정보 저장 완료');
+            }
+
+
+            // 🚀 STEP 3: 결과 페이지로 데이터 전달 및 이동
+            // 프론트에서 보여줄용 문자열 생성
+            const selectionString = Object.entries(selectedItems)
+                .filter(([_, subCat]) => subCat !== null)
+                .map(([mainCat, subCat]) => `${mainCat}: ${subCat}`)
+                .join(', ');
+
+            const resultToPass = {
+                faceShape: analysisData.face_shape,
+                bodyShape: analysisData.body_shape,
+                personalColor: analysisData.skin_tone,
+                clothingType: selectionString,
+                situation: situationPrompt
+            };
+
+            const queryString = new URLSearchParams({ data: JSON.stringify(resultToPass) }).toString();
+            router.push(`/results?${queryString}`);
+
+        } catch (err: any) {
+            console.error(err);
+            setApiError(err.message || '서버 통신 오류가 발생했습니다.');
+        } finally {
+            setIsLoading(false);
+        }
+
+
+
+
+
+
+        // setTimeout(() => {
+        //     // 결과 문자열 포맷 변경
+        //     // e.g., "상의: 맨투맨, 하의: 데님 팬츠"
+        //     const selectionString = Object.entries(selectedItems)
+        //         .filter(([_, subCat]) => subCat !== null) // 서브 카테고리가 선택된 항목만
+        //         .map(([mainCat, subCat]) => `${mainCat}: ${subCat}`)
+        //         .join(', ');
+
+        //     const analysisResult = {
+        //         bodyShape: '역삼각형 체형',
+        //         personalColor: '가을 웜톤',
+        //         faceShape: '계란형 얼굴',
+        //         clothingType: selectionString, // 새 포맷의 문자열 전달
+        //         situation: situationPrompt
+        //     };
+
+        //     const queryString = new URLSearchParams({ data: JSON.stringify(analysisResult) }).toString();
+        //     router.push(`/results?${queryString}`);
+        // }, 2000);
+
+
+
+
+
+
+    };
+
+    return (
+        <main className={styles.mainContainer}>
+            <div className={styles.contentWrapper}>
+                <h1 className={styles.pageTitle}>스타일 분석하기</h1>
+                <p className={styles.pageSubtitle}>
+                    사진을 올리고 원하는 옷 종류를 각각 선택해주세요.<br />
+                    AI가 당신에게 꼭 맞는 스타일을 찾아드릴게요.
+                </p>
+
+                <div className={styles.uploadArea}>
+                    <UploadBox title="얼굴 사진" file={faceFile} setFile={setFaceFile} />
+                    <UploadBox title="전신 사진" file={bodyFile} setFile={setBodyFile} />
+                </div>
+
+                <div className={styles.selectionArea}>
+                    <h2 className={styles.selectionTitle}>1. 메인 카테고리 선택</h2>
+                    <p className={styles.selectionSubtitle}>분석을 원하는 카테고리를 모두 선택하세요.</p>
+                    {/* ▼ mainTypeButtons 클래스 적용 ▼ */}
+                    <div className={styles.mainTypeButtons}>
+                        {mainCategories.map((type) => (
+                            <button
+                                key={type}
+                                // ▼ 선택 확인 로직 변경 ▼
+                                className={`${styles.typeButton} ${selectedItems.hasOwnProperty(type) ? styles.selected : ''}`}
+                                onClick={() => handleMainCategoryToggle(type)}
+                            >
+                                {type}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* ▼ 활성화된 메인 카테고리별로 서브 카테고리 목록을 별도 렌더링 ▼ */}
+                {Object.keys(selectedItems).map((mainCat) => (
+                    <div key={mainCat} className={styles.selectionArea}>
+                        <h2 className={styles.selectionTitle_Sub}>{mainCat} 세부 선택</h2>
+                        <div className={styles.typeButtons}>
+                            {clothingData[mainCat].map((subCat) => (
+                                <button
+                                    key={subCat}
+                                    className={`${styles.typeButton} ${selectedItems[mainCat] === subCat ? styles.selected : ''}`}
+                                    onClick={() => handleSubCategorySelect(mainCat, subCat)}
+                                >
+                                    {subCat}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+
+                {/* ▼▼▼ [추가] 상황 프롬프트 입력란 ▼▼▼ */}
+                <div className={styles.selectionArea}>
+                    <h2 className={styles.selectionTitle_Optional}>2. 상황 및 장소 (선택 사항)</h2>
+                    <p className={styles.selectionSubtitle}>추천받고 싶은 특정 상황이나 장소를 입력하세요.</p>
+                    <input
+                        type="text"
+                        className={styles.promptInput}
+                        placeholder="예: 소개팅, 데이트, 면접, 휴양지 등"
+                        value={situationPrompt}
+                        onChange={(e) => setSituationPrompt(e.target.value)}
+                    />
+                </div>
+
+                {/* [추가] API 에러 메시지 표시 (버튼 위) */}
+                {apiError && <p className={styles.errorMessage}>{apiError}</p>}
+
+                <div className={styles.privacyNotice}>
+                    🔒 업로드된 사진은 AI 스타일 분석 목적으로만 사용되며, 분석 완료 후 즉시 파기됩니다.
+                </div>
+
+                <button
+                    className={styles.submitButton}
+                    disabled={isButtonDisabled}
+                    onClick={handleAnalysis}
+                >
+                    {isLoading ? '분석 중...' : '분석 시작하기'}
+                </button>
+            </div>
+        </main>
+    );
+}

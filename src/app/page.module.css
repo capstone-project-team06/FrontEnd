@@ -1,0 +1,45 @@
+.mainContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    /* 화면 전체 높이를 차지하도록 설정 */
+    text-align: center;
+}
+
+.contentWrapper {
+    /* 이 wrapper는 특정 너비를 제한하거나 내부 요소 정렬에 사용될 수 있습니다. */
+}
+
+.contentWrapper h1 {
+    font-size: 48px;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+
+.taglines p {
+    font-size: 18px;
+    color: #555555;
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.authLinks {
+    margin-top: 40px;
+}
+
+.authLinks a {
+    font-size: 16px;
+    color: #333333;
+    text-decoration: none;
+    margin: 0 20px;
+    padding: 8px 16px;
+    transition: all 0.2s ease-in-out;
+    /* 부드러운 효과를 위한 transition */
+}
+
+.authLinks a:hover {
+    color: #000000;
+    font-weight: 500;
+}

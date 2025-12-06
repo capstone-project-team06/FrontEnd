@@ -1,0 +1,22 @@
+.cornerIcon {
+    position: fixed;
+    /* 화면에 고정 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 아이콘을 매우 연하게 처리 */
+    z-index: -1;
+    /* 다른 콘텐츠 뒤로 보내기 */
+    pointer-events: none;
+    /* 아이콘이 클릭되지 않도록 설정 */
+}
+
+.cornerIcon {
+    position: absolute;
+    /* 이제 fixed가 아닌 absolute */
+    top: 40px;
+    right: 40px;
+    width: 120px;
+    opacity: 0.15;
+}
