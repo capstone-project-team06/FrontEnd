@@ -434,7 +434,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import styles from './page.module.css';
 
@@ -477,10 +477,7 @@ interface RecommendationResponse {
     recommendations: RecommendationItem[];
 }
 
-// DUMMY_RESPONSE는 API 연결을 위해 삭제합니다.
-// URL: https://fit-me-up.p-e.kr/recommendation/final/
-
-export default function ResultsPage() {
+function ResultsContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
 
@@ -671,6 +668,16 @@ export default function ResultsPage() {
                 )}
 
             </div>
+        </main>
+    );
+}
+
+export default function ResultsPage() {
+    return (
+        <main className={styles.mainContainer}>
+            <Suspense fallback={<div className={styles.loadingBox}><h2>로딩 중...</h2></div>}>
+                <ResultsContent />
+            </Suspense>
         </main>
     );
 }
