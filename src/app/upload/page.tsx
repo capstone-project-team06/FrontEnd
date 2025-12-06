@@ -254,6 +254,7 @@ export default function UploadPage() {
             const queryString = new URLSearchParams({ data: JSON.stringify(resultToPass) }).toString();
             router.push(`/results?${queryString}`);
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             console.error(err);
             setApiError(err.message || '서버 통신 오류가 발생했습니다.');

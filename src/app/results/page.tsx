@@ -470,6 +470,7 @@ interface MatchedCelebrity {
 interface RecommendationResponse {
     matched_celebrity: MatchedCelebrity;
     user_analysis: UserAnalysis;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recommendation_request: any; // 사용하지 않으므로 간단히 any 처리
     needs: string;
     summary: string;
@@ -608,7 +609,7 @@ export default function ResultsPage() {
                     <div className={styles.celebInfo}>
                         <h2 className={styles.celebTitle}>비슷한 스타일의 셀럽: <span>{matched_celebrity.name}</span></h2>
                         <p className={styles.outfitSummary}>
-                            추천 코디 요약: "{summary}"
+                            {'추천 코디 요약:'} "{summary}"
                         </p>
 
 

@@ -84,7 +84,7 @@ export default function SignupPage() {
         }
 
         // ▼ [수정] '기타' 및 '직접 입력' 값 처리 로직
-        let finalOtherLooks: string[] = [];
+        const finalOtherLooks: string[] = [];
         if (isOtherLookChecked) {
             if (otherLook) {
                 finalOtherLooks.push(otherLook); // '직접 입력' 값이 있으면 그 값 사용
@@ -96,7 +96,7 @@ export default function SignupPage() {
             ? ['모르겠음']
             : [...preferredLooks, ...finalOtherLooks];
 
-        let finalOtherColors: string[] = [];
+        const finalOtherColors: string[] = [];
         if (isOtherColorChecked) {
             if (otherColor) finalOtherColors.push(otherColor);
             else finalOtherColors.push('기타');
