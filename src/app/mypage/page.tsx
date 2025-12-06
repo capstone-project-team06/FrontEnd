@@ -51,11 +51,11 @@ export default function MyPage() {
         const fetchUserInfo = async () => {
             // 토큰 확인
             const token = localStorage.getItem('accessToken');
-            // if (!token) {
-            //     alert('로그인이 필요합니다.');
-            //     router.push('/login');
-            //     return;
-            // }
+            if (!token) {
+                alert('로그인이 필요합니다.');
+                router.push('/login');
+                return;
+            }
 
             try {
                 // API 호출 (GET)
@@ -79,7 +79,7 @@ export default function MyPage() {
                     // 온보딩 데이터 처리 (기타 항목 분리 로직)
                     const onboarding = data.onboarding || {};
 
-                    // (1) 룩 데이터 처리
+                    // 룩 데이터 처리
                     const backendLooks = onboarding.styles || [];
                     if (backendLooks.includes('모르겠음')) {
                         setDontKnowLook(true);
@@ -95,7 +95,7 @@ export default function MyPage() {
                         }
                     }
 
-                    // (2) 색상 데이터 처리
+                    // 색상 데이터 처리
                     const backendColors = onboarding.preferred_colors || [];
                     if (backendColors.includes('모르겠음')) {
                         setDontKnowColor(true);
@@ -110,7 +110,7 @@ export default function MyPage() {
                         }
                     }
 
-                    // (3) 핏 데이터 처리
+                    // 핏 데이터 처리
                     const backendFits = onboarding.preferred_fits || [];
                     if (backendFits.includes('모르겠음')) {
                         setDontKnowFit(true);

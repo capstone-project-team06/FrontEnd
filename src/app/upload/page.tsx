@@ -108,7 +108,6 @@ export default function UploadPage() {
     const [bodyFile, setBodyFile] = useState<File | null>(null);
 
     // State 변경: 선택 항목을 객체로 관리
-    // e.g., { '상의': '맨투맨', '하의': '데님 팬츠' }
     const [selectedItems, setSelectedItems] = useState<{ [key: string]: string | null }>({});
     const [situationPrompt, setSituationPrompt] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -118,7 +117,7 @@ export default function UploadPage() {
     // const isSelectionMade = Object.values(selectedItems).some(subCat => subCat !== null);
     const isButtonDisabled = !faceFile || !bodyFile || isLoading;
 
-    // ▼ 메인 카테고리 토글(On/Off) 핸들러
+    // 메인 카테고리 토글(On/Off) 핸들러
     const handleMainCategoryToggle = (category: string) => {
         setSelectedItems(prev => {
             const newItems = { ...prev };
@@ -133,7 +132,7 @@ export default function UploadPage() {
         });
     };
 
-    // ▼ 서브 카테고리 선택 핸들러
+    // 서브 카테고리 선택 핸들러
     const handleSubCategorySelect = (mainCat: string, subCat: string) => {
         setSelectedItems(prev => ({
             ...prev,
@@ -153,7 +152,7 @@ export default function UploadPage() {
         if (!token) {
             setApiError('로그인이 필요합니다. 다시 로그인해주세요.');
             setIsLoading(false);
-            // router.push('/login'); // 로그인 페이지로 쫓아내기
+            router.push('/login'); // 로그인 페이지로 쫓아내기
             return;
         }
 
@@ -175,7 +174,7 @@ export default function UploadPage() {
         // formData.append('requestData', JSON.stringify(analysisRequest)); // JSON을 문자열로 변환하여 첨부
 
         try {
-            // 🚀 STEP 1: 사진 업로드 및 분석 요청
+            // 사진 업로드 및 분석 요청
             const formData = new FormData();
             formData.append('face_image', faceFile!);
             formData.append('body_image', bodyFile!);
@@ -195,9 +194,9 @@ export default function UploadPage() {
             const analysisData = imageResponseData.analysis; // 분석 결과 (체형, 퍼스널컬러 등)
 
 
-            // 🚀 STEP 2: 온보딩(선호도/상황) 정보 저장 요청
+            // 온보딩(선호도/상황) 정보 저장 요청
             // selectedItems 상태를 백엔드 요구 포맷(Array)으로 변환
-            // ▼▼▼ [수정] 한글 선택값을 영어 코드로 변환 ▼▼▼
+            // 한글 선택값을 영어 코드로 변환
             const mainCatsArray = Object.keys(selectedItems).map(korName => {
                 return categoryMap[korName] || korName; // 맵에 없으면 그냥 한글 보냄
             });
@@ -220,14 +219,13 @@ export default function UploadPage() {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json' // JSON 전송 시 필수
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(preferenceBody),
             });
 
             if (!prefRes.ok) {
                 // 사진 분석은 성공했지만 온보딩 저장이 실패한 경우
-                // 에러를 띄울지, 아니면 그냥 넘어갈지 결정해야 합니다. 여기서는 에러로 처리합니다.
                 const err = await prefRes.json();
                 console.error('온보딩 저장 실패:', err);
                 throw new Error(`선호 정보 저장 실패: ${JSON.stringify(err)}`);
@@ -236,7 +234,7 @@ export default function UploadPage() {
             }
 
 
-            // 🚀 STEP 3: 결과 페이지로 데이터 전달 및 이동
+            // 결과 페이지로 데이터 전달 및 이동
             // 프론트에서 보여줄용 문자열 생성
             const selectionString = Object.entries(selectedItems)
                 .filter(([_, subCat]) => subCat !== null)
@@ -264,9 +262,6 @@ export default function UploadPage() {
 
 
 
-
-
-
         // setTimeout(() => {
         //     // 결과 문자열 포맷 변경
         //     // e.g., "상의: 맨투맨, 하의: 데님 팬츠"
@@ -287,11 +282,6 @@ export default function UploadPage() {
         //     router.push(`/results?${queryString}`);
         // }, 2000);
 
-
-
-
-
-
     };
 
     return (
@@ -311,12 +301,12 @@ export default function UploadPage() {
                 <div className={styles.selectionArea}>
                     <h2 className={styles.selectionTitle}>1. 메인 카테고리 선택</h2>
                     <p className={styles.selectionSubtitle}>분석을 원하는 카테고리를 모두 선택하세요.</p>
-                    {/* ▼ mainTypeButtons 클래스 적용 ▼ */}
+                    {/* mainTypeButtons 클래스 적용 */}
                     <div className={styles.mainTypeButtons}>
                         {mainCategories.map((type) => (
                             <button
                                 key={type}
-                                // ▼ 선택 확인 로직 변경 ▼
+                                // 선택 확인 로직 변경
                                 className={`${styles.typeButton} ${selectedItems.hasOwnProperty(type) ? styles.selected : ''}`}
                                 onClick={() => handleMainCategoryToggle(type)}
                             >
@@ -326,7 +316,7 @@ export default function UploadPage() {
                     </div>
                 </div>
 
-                {/* ▼ 활성화된 메인 카테고리별로 서브 카테고리 목록을 별도 렌더링 ▼ */}
+                {/* 활성화된 메인 카테고리별로 서브 카테고리 목록을 별도 렌더링 */}
                 {Object.keys(selectedItems).map((mainCat) => (
                     <div key={mainCat} className={styles.selectionArea}>
                         <h2 className={styles.selectionTitle_Sub}>{mainCat} 세부 선택</h2>
@@ -344,7 +334,7 @@ export default function UploadPage() {
                     </div>
                 ))}
 
-                {/* ▼▼▼ [추가] 상황 프롬프트 입력란 ▼▼▼ */}
+                {/* 상황 프롬프트 입력란 */}
                 <div className={styles.selectionArea}>
                     <h2 className={styles.selectionTitle_Optional}>2. 상황 및 장소 (선택 사항)</h2>
                     <p className={styles.selectionSubtitle}>추천받고 싶은 특정 상황이나 장소를 입력하세요.</p>
@@ -357,7 +347,7 @@ export default function UploadPage() {
                     />
                 </div>
 
-                {/* [추가] API 에러 메시지 표시 (버튼 위) */}
+                {/* API 에러 메시지 표시 (버튼 위) */}
                 {apiError && <p className={styles.errorMessage}>{apiError}</p>}
 
                 <div className={styles.privacyNotice}>

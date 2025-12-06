@@ -49,9 +49,7 @@ export default function LoginPage() {
                 // 로그인 성공
                 const data = await res.json();
 
-                // [중요] 서버로부터 받은 토큰을 브라우저에 저장합니다.
-                // (실제 배포 시에는 보안을 위해 쿠키 사용을 권장합니다)
-                // ▼▼▼ [체크 2] 토큰 이름 자동 찾기 (Django DRF는 보통 'key' 또는 'token' 사용)
+                // 토큰 이름 자동 찾기 (Django DRF는 보통 'key' 또는 'token' 사용)
                 const accessToken = data.token?.access_token || data.access_token || data.token;
 
                 if (accessToken) {
@@ -65,13 +63,13 @@ export default function LoginPage() {
             } else {
                 // 로그인 실패
                 const errorData = await res.json();
-                console.log("로그인 실패:", errorData); // 콘솔로 에러 내용 확인
+                console.log("로그인 실패:", errorData);
                 // 에러 메시지가 배열로 오는 경우 처리 (Django 특성)
                 const message = errorData.detail || errorData.non_field_errors?.[0] || '이메일 또는 비밀번호가 올바르지 않습니다.';
                 setError(message);
             }
         } catch (err) {
-            console.error("네트워크 에러:", err); // 콘솔로 에러 확인
+            console.error("네트워크 에러:", err);
             setError('서버와 통신 중 오류가 발생했습니다.');
         } finally {
             setIsLoading(false);

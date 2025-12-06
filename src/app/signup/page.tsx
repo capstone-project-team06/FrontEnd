@@ -1,15 +1,15 @@
-'use client'; // state 사용을 위해 클라이언트 컴포넌트로 변경
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './page.module.css';
-import { useRouter } from 'next/navigation'; // [추가] router 임포트
+import { useRouter } from 'next/navigation';
 
 
 // 선호 룩 옵션
 const lookOptions = ['미니멀', '캐주얼', '아메카지', '클래식', '스트릿'];
 
-// ▼ [추가] 색상 옵션 데이터 (이름과 실제 색상 코드)
+// 색상 옵션 데이터 (이름과 실제 색상 코드)
 const colorOptions = [
     { label: '블랙', hex: '#000000' },
     { label: '화이트', hex: '#FFFFFF' },
@@ -22,16 +22,16 @@ const colorOptions = [
     { label: '레드', hex: '#FF0000' },
 ];
 
-// ▼ [추가] 핏 옵션 데이터
+// ▼ 핏 옵션
 const fitOptions = ['오버핏', '레귤러핏', '슬림핏'];
 
 export default function SignupPage() {
-    const router = useRouter(); // [추가]
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
 
-    // ▼ [추가] 비밀번호 에러 메시지 State
+    // 비밀번호 에러 메시지 State
     const [passwordError, setPasswordError] = useState('');
 
     const [name, setName] = useState('');
@@ -39,30 +39,30 @@ export default function SignupPage() {
     const [age, setAge] = useState('');
     const [gender, setGender] = useState('M'); // 기본값 'M' (남성)
 
-    // ▼ [추가] 키, 몸무게 State
+    // 키, 몸무게 State
     const [height, setHeight] = useState('');
     const [weight, setWeight] = useState('');
 
-    // ▼ [추가] 선호 룩 State
+    // 선호 룩 State
     const [preferredLooks, setPreferredLooks] = useState<string[]>([]);
     const [otherLook, setOtherLook] = useState('');
     const [dontKnowLook, setDontKnowLook] = useState(false);
     const [isOtherLookChecked, setIsOtherLookChecked] = useState(false);
 
-    // --- [추가/수정] 선호 색상 State ---
+    // 선호 색상 State
     const [preferredColors, setPreferredColors] = useState<string[]>([]);
     const [otherColor, setOtherColor] = useState(''); // 색상 직접 입력
     const [dontKnowColor, setDontKnowColor] = useState(false); // 색상 모르겠음
     const [isOtherColorChecked, setIsOtherColorChecked] = useState(false);
 
-    // ▼ [추가] 핏 State
+    // 핏 State
     const [preferredFits, setPreferredFits] = useState<string[]>([]);
     const [dontKnowFit, setDontKnowFit] = useState(false);
 
-    // [추가] API 에러 메시지 State
+    // API 에러 메시지 State
     const [apiError, setApiError] = useState('');
 
-    // ▼ [추가] 비밀번호 일치 여부 실시간 검사
+    // 비밀번호 일치 여부 실시간 검사
     useEffect(() => {
         // '비밀번호 확인'란이 비어있지 않고, 두 비밀번호가 다를 경우
         if (passwordConfirm && password !== passwordConfirm) {
@@ -83,7 +83,7 @@ export default function SignupPage() {
             return; // 일치하지 않으면 제출 중단
         }
 
-        // ▼ [수정] '기타' 및 '직접 입력' 값 처리 로직
+        // '기타' 및 '직접 입력' 값 처리 로직
         const finalOtherLooks: string[] = [];
         if (isOtherLookChecked) {
             if (otherLook) {
@@ -105,24 +105,21 @@ export default function SignupPage() {
 
         const finalFits = dontKnowFit ? ['모르겠음'] : preferredFits;
 
-        // ▼▼▼ [중요] 백엔드 명세에 정확히 맞춘 데이터 구조 ▼▼▼
         const signupData = {
-            email: email,          // "testuser1"
-            password: password,          // "1234"
-            gender: gender,              // "M"
-            age: Number(age),            // 24 (숫자 변환)
-            height_cm: Number(height),   // 178 (이름 변경: height -> height_cm)
-            weight_kg: Number(weight)    // 68 (이름 변경: weight -> weight_kg)
+            email: email,
+            password: password,
+            gender: gender,
+            age: Number(age),
+            height_cm: Number(height),
+            weight_kg: Number(weight)
         };
 
-        // ▼▼▼ [2단계 데이터] 온보딩용 (선호 정보) ▼▼▼
-        // (백엔드가 원하는 필드명에 맞춰야 함. 보통 looks, colors, fits 일 확률 높음)
+        // 온보딩용 (선호 정보)
         const onboardingData = {
             styles: finalLooks,
             preferred_colors: finalColors,
             preferred_fits: finalFits
         };
-
 
         try {
             // [API 호출] 백엔드의 회원가입 엔드포인트로 POST 요청
@@ -153,8 +150,8 @@ export default function SignupPage() {
             // 로컬 스토리지에 토큰 저장
             localStorage.setItem('accessToken', accessToken);
 
-            // 🚀 [2차 호출] 온보딩 API (선호 정보 등록)
-            // 이 요청은 "로그인 된 상태"로 보내야 하므로 헤더에 토큰을 넣습니다.
+            // [2차 호출] 온보딩 API (선호 정보 등록)
+            // "로그인 된 상태"로 보내야 하므로 헤더에 토큰을 넣음
             const onboardingRes = await fetch('https://fit-me-up.p-e.kr/onboarding/', {
                 method: 'POST',
                 headers: {
@@ -180,7 +177,7 @@ export default function SignupPage() {
         }
     };
 
-    // ▼ [추가] 일반 룩 체크박스 핸들러
+    // 일반 룩 체크박스 핸들러
     const handleLookChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = e.target;
 
@@ -194,7 +191,7 @@ export default function SignupPage() {
         }
     };
 
-    // ▼ [추가] '기타' 체크박스 핸들러
+    // '기타' 체크박스 핸들러
     const handleOtherLookCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { checked } = e.target;
         setIsOtherLookChecked(checked);
@@ -217,7 +214,7 @@ export default function SignupPage() {
         }
     };
 
-    // ▼ [추가] '모르겠음' 체크박스 핸들러
+    // '모르겠음' 체크박스 핸들러
     const handleDontKnowLookChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { checked } = e.target;
         setDontKnowLook(checked);
@@ -229,9 +226,7 @@ export default function SignupPage() {
         }
     };
 
-    // --- [추가/수정] 색상 핸들러 ---
-
-    // 1. 일반 색상 선택
+    // 일반 색상 선택
     const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = e.target;
         setDontKnowColor(false); // 일반 색상 선택 시 '모르겠음' 해제
@@ -242,7 +237,7 @@ export default function SignupPage() {
         }
     };
 
-    // 2. 색상 '기타' 체크박스
+    // 색상 '기타' 체크박스
     const handleOtherColorCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { checked } = e.target;
         setIsOtherColorChecked(checked);
@@ -253,7 +248,7 @@ export default function SignupPage() {
         }
     };
 
-    // 3. 색상 '직접 입력' 텍스트
+    // 색상 '직접 입력' 텍스트
     const handleOtherColorInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newText = e.target.value;
         setOtherColor(newText);
@@ -263,7 +258,7 @@ export default function SignupPage() {
         }
     };
 
-    // 4. 색상 '모르겠음' 체크박스
+    // 색상 '모르겠음' 체크박스
     const handleDontKnowColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { checked } = e.target;
         setDontKnowColor(checked);
@@ -274,9 +269,7 @@ export default function SignupPage() {
         }
     };
 
-    // ▼ [추가] 핏 핸들러
-
-    // 1. 일반 핏 선택
+    // 일반 핏 선택
     const handleFitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = e.target;
         setDontKnowFit(false); // 일반 핏 선택 시 '모르겠음' 해제
@@ -287,7 +280,7 @@ export default function SignupPage() {
         }
     };
 
-    // 2. 핏 '모르겠음' 체크박스
+    // 핏 '모르겠음' 체크박스
     const handleDontKnowFitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { checked } = e.target;
         setDontKnowFit(checked);
@@ -328,10 +321,10 @@ export default function SignupPage() {
                         required
                     />
 
-                    {/* ▼ [추가] 비밀번호 불일치 에러 메시지 ▼ */}
+                    {/* 비밀번호 불일치 에러 메시지 ▼ */}
                     {passwordError && <p className={styles.errorMessage}>{passwordError}</p>}
 
-                    {/* [추가] API 에러 메시지 표시 */}
+                    {/* API 에러 메시지 표시 */}
                     {apiError && <p className={styles.errorMessage}>{apiError}</p>}
 
                     <input
@@ -343,7 +336,7 @@ export default function SignupPage() {
                         required
                     />
 
-                    {/* ▼▼▼ [추가] 나이 및 성별 입력 ▼▼▼ */}
+                    {/* 나이 및 성별 입력 */}
                     <div className={styles.inputGroup}>
                         <input
                             type="number"
@@ -353,7 +346,7 @@ export default function SignupPage() {
                             onChange={(e) => setAge(e.target.value)}
                             required
                         />
-                        {/* 성별 선택 (셀렉트 박스) */}
+                        {/* 성별 선택 */}
                         <select
                             className={`${styles.inputField} ${styles.inputFieldHalf}`}
                             value={gender}
@@ -364,7 +357,7 @@ export default function SignupPage() {
                         </select>
                     </div>
 
-                    {/* ▼ [추가] 키 / 몸무게 입력란 ▼ */}
+                    {/* 키 / 몸무게 입력란 */}
                     <div className={styles.inputGroup}>
                         <input
                             type="number"
@@ -382,7 +375,7 @@ export default function SignupPage() {
                         />
                     </div>
 
-                    {/* ▼ [추가] 선호 룩 선택 ▼ */}
+                    {/* 선호 룩 선택 */}
                     <div className={styles.formSection}>
                         <h2 className={styles.sectionTitle}>선호하는 룩 (중복 선택 가능)</h2>
                         <div className={styles.checkboxGrid}>
@@ -398,7 +391,7 @@ export default function SignupPage() {
                                     <span>{look}</span>
                                 </label>
                             ))}
-                            {/* ▼ [수정] '기타' 체크박스 (1열) ▼ */}
+                            {/* '기타' 체크박스 (1열) */}
                             <label className={styles.checkboxWrapper}>
                                 <input
                                     type="checkbox"
@@ -410,7 +403,7 @@ export default function SignupPage() {
                                 <span>기타</span>
                             </label>
 
-                            {/* ▼ [수정] '직접 입력' 필드 (2열) ▼ */}
+                            {/* '직접 입력' 필드 (2열) */}
                             <div className={styles.otherInputWrapper}>
                                 <input
                                     type="text"
@@ -434,7 +427,7 @@ export default function SignupPage() {
                         </div>
                     </div>
 
-                    {/* ▼▼▼ [수정] 선호하는 색상 섹션 ▼▼▼ */}
+                    {/* 선호하는 색상 */}
                     <div className={styles.formSection}>
                         <h2 className={styles.sectionTitle}>선호하는 색상 (중복 선택 가능)</h2>
                         <div className={styles.checkboxGrid}>
@@ -488,7 +481,7 @@ export default function SignupPage() {
                         </div>
                     </div>
 
-                    {/* ▼▼▼ [추가] 3. 선호하는 핏 섹션 ▼▼▼ */}
+                    {/* 선호하는 핏 섹션 */}
                     <div className={styles.formSection}>
                         <h2 className={styles.sectionTitle}>선호하는 핏 (중복 선택 가능)</h2>
                         <div className={styles.checkboxGrid}>
