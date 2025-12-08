@@ -14,15 +14,6 @@ const lookMapReverse: { [key: string]: string } = {
 
 // --- 옵션 데이터 (회원가입과 동일) ---
 const lookOptions = ['미니멀', '캐주얼', '아메카지', '클래식', '스트릿'];
-const colorOptions = [
-    { label: '블랙', hex: '#000000' }, { label: '화이트', hex: '#FFFFFF' },
-    { label: '그레이', hex: '#808080' }, { label: '네이비', hex: '#000080' },
-    { label: '베이지', hex: '#F5F5DC' }, { label: '브라운', hex: '#8B4513' },
-    { label: '카키', hex: '#556B2F' }, { label: '파스텔', hex: '#FFD1DC' },
-    { label: '비비드', hex: '#FF0000' },
-];
-const colorLabels = colorOptions.map(c => c.label);
-const fitOptions = ['오버핏', '레귤러핏', '슬림핏'];
 
 export default function MyPage() {
     const router = useRouter();
@@ -38,16 +29,6 @@ export default function MyPage() {
     const [otherLook, setOtherLook] = useState('');
     const [isOtherLookChecked, setIsOtherLookChecked] = useState(false);
     const [dontKnowLook, setDontKnowLook] = useState(false);
-
-    // 선호 색상 State
-    const [preferredColors, setPreferredColors] = useState<string[]>([]);
-    const [otherColor, setOtherColor] = useState('');
-    const [isOtherColorChecked, setIsOtherColorChecked] = useState(false);
-    const [dontKnowColor, setDontKnowColor] = useState(false);
-
-    // 선호 핏 State
-    const [preferredFits, setPreferredFits] = useState<string[]>([]);
-    const [dontKnowFit, setDontKnowFit] = useState(false);
 
     // 비밀번호 변경 State
     const [currentPassword, setCurrentPassword] = useState('');
@@ -101,51 +82,6 @@ export default function MyPage() {
                             setOtherLook(customLooks.join(', '));
                         }
                     }
-
-                    // 온보딩 데이터 처리 (기타 항목 분리 로직)
-                    const onboarding = data.onboarding || {};
-
-                    // // 룩 데이터 처리
-                    // const backendLooks = onboarding.styles || [];
-                    // if (backendLooks.includes('모르겠음')) {
-                    //     setDontKnowLook(true);
-                    // } else {
-                    //     // 기본 옵션에 있는 것과 없는 것(기타) 분리
-                    //     const standardLooks = backendLooks.filter((l: string) => lookOptions.includes(l));
-                    //     const customLooks = backendLooks.filter((l: string) => !lookOptions.includes(l));
-
-                    //     setPreferredLooks(standardLooks);
-                    //     if (customLooks.length > 0) {
-                    //         setIsOtherLookChecked(true);
-                    //         setOtherLook(customLooks.join(', ')); // 기타 내용 채우기
-                    //     }
-                    // }
-
-                    // 색상 데이터 처리
-                    const backendColors = onboarding.preferred_colors || [];
-                    if (backendColors.includes('모르겠음')) {
-                        setDontKnowColor(true);
-                    } else {
-                        const standardColors = backendColors.filter((c: string) => colorLabels.includes(c));
-                        const customColors = backendColors.filter((c: string) => !colorLabels.includes(c));
-
-                        setPreferredColors(standardColors);
-                        if (customColors.length > 0) {
-                            setIsOtherColorChecked(true);
-                            setOtherColor(customColors.join(', '));
-                        }
-                    }
-
-                    // 핏 데이터 처리
-                    const backendFits = onboarding.preferred_fits || [];
-                    if (backendFits.includes('모르겠음')) {
-                        setDontKnowFit(true);
-                    } else {
-                        // 핏은 보통 기타 입력이 없으므로 그대로 사용 (혹시 몰라 필터링은 유지)
-                        const standardFits = backendFits.filter((f: string) => fitOptions.includes(f));
-                        setPreferredFits(standardFits);
-                    }
-
                 } else {
                     console.error("정보 불러오기 실패");
                     // 토큰 만료 등의 이유로 실패 시 로그인 페이지로 이동시킬 수도 있음
@@ -188,38 +124,6 @@ export default function MyPage() {
         if (e.target.checked) { setPreferredLooks([]); setIsOtherLookChecked(false); setOtherLook(''); }
     };
 
-    // 색상 핸들러
-    const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value, checked } = e.target;
-        setDontKnowColor(false);
-        if (checked) setPreferredColors(prev => [...prev, value]);
-        else setPreferredColors(prev => prev.filter(item => item !== value));
-    };
-    const handleOtherColorCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setIsOtherColorChecked(e.target.checked);
-        if (e.target.checked) setDontKnowColor(false); else setOtherColor('');
-    };
-    const handleOtherColorInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setOtherColor(e.target.value);
-        if (e.target.value) { setIsOtherColorChecked(true); setDontKnowColor(false); }
-    };
-    const handleDontKnowColor = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDontKnowColor(e.target.checked);
-        if (e.target.checked) { setPreferredColors([]); setIsOtherColorChecked(false); setOtherColor(''); }
-    };
-
-    // 핏 핸들러
-    const handleFitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value, checked } = e.target;
-        setDontKnowFit(false);
-        if (checked) setPreferredFits(prev => [...prev, value]);
-        else setPreferredFits(prev => prev.filter(item => item !== value));
-    };
-    const handleDontKnowFit = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDontKnowFit(e.target.checked);
-        if (e.target.checked) setPreferredFits([]);
-    };
-
     // 프로필 저장 핸들러
     const handleProfileUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -241,29 +145,11 @@ export default function MyPage() {
         // 한글 -> 영어 변환 (매핑 안 되면 그대로 보냄)
         const finalLooksEn = finalLooks.map(l => lookMapReverse[l] || l);
 
-        // 색상 데이터 합치기
-        let finalColors = [...preferredColors];
-        if (!dontKnowColor && isOtherColorChecked && otherColor) {
-            finalColors.push(otherColor);
-        } else if (dontKnowColor) {
-            finalColors = ['모르겠음'];
-        }
-
-        // 핏 데이터 합치기
-        let finalFits = [...preferredFits];
-        if (dontKnowFit) {
-            finalFits = ['모르겠음'];
-        }
-
         // 전송할 JSON 데이터 만들기
         const updateData = {
             height_cm: Number(height) || null,
             weight_kg: Number(weight) || null,
-            onboarding: {
-                styles: finalLooksEn,
-                preferred_colors: finalColors,
-                preferred_fits: finalFits
-            }
+            styles: finalLooksEn,
         };
 
         try {
@@ -341,48 +227,6 @@ export default function MyPage() {
                             </div>
                             <label className={`${styles.checkboxWrapper} ${styles.fullWidth}`}>
                                 <input type="checkbox" className={styles.checkboxInput} checked={dontKnowLook} onChange={handleDontKnowLook} />
-                                <span>모르겠음 (없음)</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    {/* 색상 수정 */}
-                    <div className={styles.subSection}>
-                        <h3>선호하는 색상</h3>
-                        <div className={styles.checkboxGrid}>
-                            {colorOptions.map(color => (
-                                <label key={color.label} className={styles.checkboxWrapper}>
-                                    <input type="checkbox" className={styles.checkboxInput} value={color.label} checked={preferredColors.includes(color.label)} onChange={handleColorChange} />
-                                    <span className={styles.colorCircle} style={{ backgroundColor: color.hex }}></span>
-                                    <span>{color.label}</span>
-                                </label>
-                            ))}
-                            <label className={styles.checkboxWrapper}>
-                                <input type="checkbox" className={styles.checkboxInput} checked={isOtherColorChecked} onChange={handleOtherColorCheck} />
-                                <span>기타</span>
-                            </label>
-                            <div className={styles.otherInputWrapper}>
-                                <input type="text" placeholder="직접 입력" className={styles.otherInput} value={otherColor} onChange={handleOtherColorInput} />
-                            </div>
-                            <label className={`${styles.checkboxWrapper} ${styles.fullWidth}`}>
-                                <input type="checkbox" className={styles.checkboxInput} checked={dontKnowColor} onChange={handleDontKnowColor} />
-                                <span>모르겠음 (없음)</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    {/* 핏 수정 */}
-                    <div className={styles.subSection}>
-                        <h3>선호하는 핏</h3>
-                        <div className={styles.checkboxGrid}>
-                            {fitOptions.map(fit => (
-                                <label key={fit} className={styles.checkboxWrapper}>
-                                    <input type="checkbox" className={styles.checkboxInput} value={fit} checked={preferredFits.includes(fit)} onChange={handleFitChange} />
-                                    <span>{fit}</span>
-                                </label>
-                            ))}
-                            <label className={`${styles.checkboxWrapper} ${styles.fullWidth}`}>
-                                <input type="checkbox" className={styles.checkboxInput} checked={dontKnowFit} onChange={handleDontKnowFit} />
                                 <span>모르겠음 (없음)</span>
                             </label>
                         </div>
