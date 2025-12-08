@@ -31,6 +31,7 @@ interface MatchedCelebrity {
     body_shape: string;
     skin_tone: string;
     similarity: number;
+    image_url: string;
 }
 
 interface RecommendationResponse {
@@ -227,10 +228,22 @@ function ResultsContent() {
 
                     </div>
                     <div className={styles.celebImageWrapper}>
-                        {/* API 응답에 연예인 이미지 URL이 없으므로, 나중에 추가 */}
-                        <div className={styles.noImagePlaceholder}>
-                            {matched_celebrity.name} 이미지 (API에 없음)
-                        </div>
+                        {matched_celebrity.image_url ? (
+                            <img
+                                src={matched_celebrity.image_url}
+                                alt={matched_celebrity.name}
+                                className={styles.celebImage}
+                                onError={(e) => {
+                                    // 이미지 로드 실패 시 대체 이미지 혹은 텍스트 표시
+                                    (e.target as HTMLImageElement).style.display = 'none';
+                                    // 부모 요소에 '이미지 없음' 텍스트를 보여주려면 추가 로직 필요하지만, 일단 숨김 처리
+                                }}
+                            />
+                        ) : (
+                            <div className={styles.noImagePlaceholder}>
+                                {matched_celebrity.name}
+                            </div>
+                        )}
                     </div>
                 </div>
 
