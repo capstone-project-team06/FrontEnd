@@ -51,15 +51,15 @@ function UploadBox({ title, file, setFile }) {
 
 // 옷 종류 데이터 구조
 const clothingData = {
-    '상의': ['반팔티', '긴팔티', '맨투맨', '니트', '긴팔 셔츠', '반팔 셔츠', '후드티', '민소매', '카라 티셔츠'],
-    '하의': ['스웨트 팬츠', '데님 팬츠', '슬랙스', '치노 팬츠', '린넨 팬츠', '나일론 팬츠', '코듀로이 팬츠'],
-    '아우터': ['가디건', '데님 자켓', '스웨이드 자켓', '가죽 자켓', '패딩', '코트', '바람막이', '후드집업', '블레이저', '밀리터리 자켓', '무스탕', '플리스']
+    '상의': ['반팔티', '맨투맨', '니트', '셔츠', '후드티', '민소매'],
+    '하의': ['스웨트 팬츠', '데님 팬츠', '슬랙스', '나일론 팬츠'],
+    '아우터': ['가디건', '데님 자켓', '가죽 자켓', '패딩', '코트', '바람막이', '블레이저']
 };
 const mainCategories = Object.keys(clothingData);
 
 
 
-// ▼▼▼ [추가] 한글 -> 영어 변환 맵 (백엔드 명세에 맞춰 수정 필수!) ▼▼▼
+// 한글 -> 영어 변환 맵
 const categoryMap: { [key: string]: string } = {
     // 메인 카테고리
     '상의': 'top',
@@ -68,36 +68,26 @@ const categoryMap: { [key: string]: string } = {
 
     // 서브 카테고리 (상의)
     '반팔티': 'short_sleeve',
-    '긴팔티': 'long_sleeve',
     '맨투맨': 'sweatshirt',
     '니트': 'knit',
-    '긴팔 셔츠': 'long_sleeve_shirt',
-    '반팔 셔츠': 'short_sleeve_shirt',
+    '셔츠': 'shirt',
     '후드티': 'hoodie',
     '민소매': 'sleeveless',
-    '카라 티셔츠': 'collar_tshirt',
 
     // 서브 카테고리 (하의)
     '스웨트 팬츠': 'sweat_pants',
     '데님 팬츠': 'denim_pants',
     '슬랙스': 'slacks',
-    '치노 팬츠': 'chino_pants',
     '나일론 팬츠': 'nylon_pants',
-    '코듀로이 팬츠': 'corduroy_pants',
 
     // 서브 카테고리 (아우터)
     '가디건': 'cardigan',
     '데님 자켓': 'denim_jacket',
-    '나일론 자켓': 'nylon_jacket',
-    '스웨이드 자켓': 'suede_jacket',
     '가죽 자켓': 'leather_jacket',
     '패딩': 'padded_jacket',
     '코트': 'coat',
     '바람막이': 'windbreaker',
-    '후드집업': 'zip_up_hoodie',
     '블레이저': 'blazer',
-    '무스탕': 'shearling_jacket',
-    '플리스': 'fleece_jacket'
 };
 
 
@@ -155,23 +145,6 @@ export default function UploadPage() {
             router.push('/login'); // 로그인 페이지로 쫓아내기
             return;
         }
-
-        // 텍스트 데이터 포맷팅
-        // const selectionString = Object.entries(selectedItems)
-        //     .filter(([_, subCat]) => subCat !== null)
-        //     .map(([mainCat, subCat]) => `${mainCat}: ${subCat}`)
-        //     .join(', ');
-
-        // const analysisRequest = {
-        //     clothingType: selectionString,
-        //     situation: situationPrompt
-        // };
-
-        // 파일과 텍스트를 FormData에 담기
-        // const formData = new FormData();
-        // formData.append('faceImage', faceFile!); // (faceFile이 null이 아님을 보장)
-        // formData.append('bodyImage', bodyFile!); // (bodyFile이 null이 아님을 보장)
-        // formData.append('requestData', JSON.stringify(analysisRequest)); // JSON을 문자열로 변환하여 첨부
 
         try {
             // 사진 업로드 및 분석 요청
@@ -265,29 +238,6 @@ export default function UploadPage() {
         } finally {
             setIsLoading(false);
         }
-
-
-
-        // setTimeout(() => {
-        //     // 결과 문자열 포맷 변경
-        //     // e.g., "상의: 맨투맨, 하의: 데님 팬츠"
-        //     const selectionString = Object.entries(selectedItems)
-        //         .filter(([_, subCat]) => subCat !== null) // 서브 카테고리가 선택된 항목만
-        //         .map(([mainCat, subCat]) => `${mainCat}: ${subCat}`)
-        //         .join(', ');
-
-        //     const analysisResult = {
-        //         bodyShape: '역삼각형 체형',
-        //         personalColor: '가을 웜톤',
-        //         faceShape: '계란형 얼굴',
-        //         clothingType: selectionString, // 새 포맷의 문자열 전달
-        //         situation: situationPrompt
-        //     };
-
-        //     const queryString = new URLSearchParams({ data: JSON.stringify(analysisResult) }).toString();
-        //     router.push(`/results?${queryString}`);
-        // }, 2000);
-
     };
 
     return (
