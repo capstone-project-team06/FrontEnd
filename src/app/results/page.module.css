@@ -60,6 +60,7 @@
 .celebritySection {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 40px;
     margin-bottom: 60px;
     background-color: #fff;
@@ -67,6 +68,7 @@
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
 }
 
 .celebImageWrapper {
@@ -106,6 +108,7 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .tag {
