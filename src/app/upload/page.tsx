@@ -53,7 +53,7 @@ function UploadBox({ title, file, setFile }) {
 const clothingData = {
     '상의': ['반팔티', '맨투맨', '니트', '셔츠', '후드티', '민소매'],
     '하의': ['스웨트 팬츠', '데님 팬츠', '슬랙스', '나일론 팬츠'],
-    '아우터': ['가디건', '데님 자켓', '가죽 자켓', '패딩', '코트', '바람막이', '블레이저']
+    '아우터': ['가디건', '자켓', '패딩', '코트', '바람막이', '블레이저']
 };
 const mainCategories = Object.keys(clothingData);
 
