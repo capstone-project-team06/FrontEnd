@@ -168,12 +168,11 @@ function ResultsContent() {
                     {/* API 응답에 matched_celebrity의 image_url 나중에 추가 */}
                     <div className={styles.celebInfo}>
                         <h2 className={styles.celebTitle}>비슷한 스타일의 셀럽: <span>{matched_celebrity.name}</span></h2>
-                        <p className={styles.outfitSummary}>
+                        {/* <p className={styles.outfitSummary}>
                             {'추천 코디 요약:'} "{summary}"
-                        </p>
+                        </p> */}
 
-                        <div className={styles.styleTags}>
-                            {/* API 응답에 celebrity_style.color/category가 없으므로, summary와 needs를 기반으로 출력 */}
+                        {/* <div className={styles.styleTags}>
                             {recommendationData.recommendation_request.main_categories.map((cat, index) => (
                                 <span key={index} className={styles.tag}>
                                     # {getDisplayValue(cat)}
@@ -185,7 +184,7 @@ function ResultsContent() {
                             <span className={styles.tag}>
                                 # {getDisplayValue(matched_celebrity.face_shape)}
                             </span>
-                        </div>
+                        </div> */}
 
                     </div>
                     <div className={styles.celebImageWrapper}>
@@ -217,7 +216,7 @@ function ResultsContent() {
                                 </div>
                                 <div className={styles.cardContent}>
                                     <h3 className={styles.cardTitle}>{item.name}</h3>
-                                    <p className={styles.similarityText}>유사도: **{(item.similarity * 100).toFixed(1)}%**</p>
+                                    <p className={styles.similarityText}>유사도: {(item.similarity * 100).toFixed(1)}%</p>
                                     <span className={styles.shopNow}>구매하러 가기 &rarr;</span>
                                 </div>
                             </a>
