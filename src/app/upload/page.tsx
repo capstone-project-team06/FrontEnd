@@ -67,7 +67,7 @@ const categoryMap: { [key: string]: string } = {
     '아우터': 'outer',
 
     // 서브 카테고리 (상의)
-    '반팔티': 'short_sleeve',
+    '반팔티': 'tshirt',
     '맨투맨': 'sweatshirt',
     '니트': 'knit',
     '셔츠': 'shirt',
@@ -75,16 +75,16 @@ const categoryMap: { [key: string]: string } = {
     '민소매': 'sleeveless',
 
     // 서브 카테고리 (하의)
-    '스웨트 팬츠': 'sweat_pants',
-    '데님 팬츠': 'denim_pants',
+    '스웨트 팬츠': 'sweatpants',
+    '데님 팬츠': 'jeans',
     '슬랙스': 'slacks',
-    '나일론 팬츠': 'nylon_pants',
+    '카고 팬츠': 'cargopants',
 
     // 서브 카테고리 (아우터)
     '가디건': 'cardigan',
-    '데님 자켓': 'denim_jacket',
-    '가죽 자켓': 'leather_jacket',
-    '패딩': 'padded_jacket',
+    '데님 자켓': 'jacket',
+    '가죽 자켓': 'jacket',
+    '패딩': 'parka',
     '코트': 'coat',
     '바람막이': 'windbreaker',
     '블레이저': 'blazer',
