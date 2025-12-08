@@ -131,12 +131,51 @@ function ResultsContent() {
         personalColor: user_analysis.skin_tone || initialAnalysis.personalColor,
     };
 
-    // API에서 받은 영어 key를 보기 좋은 한글로 변환하는 간단한 맵
-    const displayMap = {
-        'round': '둥근형', 'inverted_triangle': '역삼각형', 'light_warm': '밝은 웜톤',
-        'top': '상의', 'bottom': '하의', 'short_sleeve': '반팔', 'tshirt': '티셔츠',
+    // API에서 받은 영어 key를 한글로 변환하는 맵
+    const displayMap: { [key: string]: string } = {
+        // --- 체형 (Body Shape) ---
+        'inverted_triangle': '역삼각형',
+        'triangle': '삼각형',
+        'hourglass': '모래시계형',
+        'rectangle': '직사각형',
+        'balanced': '균형 잡힌 체형',
+
+        // --- 얼굴형 (Face Shape) ---
+        'oval': '계란형',
+        'round': '둥근형',
+        'square': '각진형(사각형)',
+        'heart': '하트형',
+        'oblong': '긴 얼굴형',
+
+        // --- 피부톤 조합 (Skin Depth + Undertone) ---
+        // Light (밝은)
+        'light_warm': '밝은 웜톤',
+        'light_cool': '밝은 쿨톤',
+        'light_neutral': '밝은 뉴트럴톤',
+        'light_unknown': '밝은 톤',
+
+        // Medium (중간)
+        'medium_warm': '중간 웜톤',
+        'medium_cool': '중간 쿨톤',
+        'medium_neutral': '중간 뉴트럴톤',
+        'medium_unknown': '중간 톤',
+
+        // Deep (어두운)
+        'deep_warm': '어두운 웜톤',
+        'deep_cool': '어두운 쿨톤',
+        'deep_neutral': '어두운 뉴트럴톤',
+        'deep_unknown': '어두운 톤',
+
+        'unknown_warm': '웜톤',
+        'unknown_cool': '쿨톤',
+        'unknown_neutral': '뉴트럴톤',
+        'unknown_unknown': '알 수 없음',
+
+        // --- 공통/기타 ---
+        'unknown': '알 수 없음',
+        'top': '상의',
+        'bottom': '하의',
         'outer': '아우터'
-        // 필요한 다른 값들도 여기에 추가
     };
 
     const getDisplayValue = (key: string) => displayMap[key] || key;
