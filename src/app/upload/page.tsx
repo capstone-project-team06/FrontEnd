@@ -52,7 +52,7 @@ function UploadBox({ title, file, setFile }) {
 // 옷 종류 데이터 구조
 const clothingData = {
     '상의': ['반팔티', '맨투맨', '니트', '셔츠', '후드티', '민소매'],
-    '하의': ['스웨트 팬츠', '데님 팬츠', '슬랙스', '나일론 팬츠'],
+    '하의': ['스웨트 팬츠', '데님 팬츠', '슬랙스', '카고 팬츠'],
     '아우터': ['가디건', '자켓', '패딩', '코트', '바람막이', '블레이저']
 };
 const mainCategories = Object.keys(clothingData);
@@ -78,7 +78,7 @@ const categoryMap: { [key: string]: string } = {
     '스웨트 팬츠': 'sweatpants',
     '데님 팬츠': 'jeans',
     '슬랙스': 'slacks',
-    '카고 팬츠': 'cargopants',
+    '카고 팬츠': 'cargo pants',
 
     // 서브 카테고리 (아우터)
     '가디건': 'cardigan',
