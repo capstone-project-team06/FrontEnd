@@ -4,6 +4,14 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 
+const lookMap: { [key: string]: string } = {
+    'minimal': '미니멀', 'casual': '캐주얼', 'amekaj': '아메카지', 'classic': '클래식', 'street': '스트릿'
+};
+
+const lookMapReverse: { [key: string]: string } = {
+    '미니멀': 'minimal', '캐주얼': 'casual', '아메카지': 'amekaj', '클래식': 'classic', '스트릿': 'street'
+};
+
 // --- 옵션 데이터 (회원가입과 동일) ---
 const lookOptions = ['미니멀', '캐주얼', '아메카지', '클래식', '스트릿'];
 const colorOptions = [
@@ -59,7 +67,7 @@ export default function MyPage() {
 
             try {
                 // API 호출 (GET)
-                const res = await fetch('http://127.0.0.1:8000/account/info/', {
+                const res = await fetch('https://fit-me-up.p-e.kr/account/info/', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -72,28 +80,46 @@ export default function MyPage() {
                     console.log("내 정보 불러오기 성공:", data);
 
                     // 데이터 매핑 (Backend -> Frontend)
-                    setName(data.username || '');
+                    setEmail(data.email || '');
+                    setName(data.name || '');
                     setHeight(data.height_cm ? String(data.height_cm) : '');
                     setWeight(data.weight_kg ? String(data.weight_kg) : '');
 
-                    // 온보딩 데이터 처리 (기타 항목 분리 로직)
-                    const onboarding = data.onboarding || {};
+                    const backendStyles = data.styles || [];
+                    const convertedStyles = backendStyles.map((s: string) => lookMap[s] || s);
 
-                    // 룩 데이터 처리
-                    const backendLooks = onboarding.styles || [];
-                    if (backendLooks.includes('모르겠음')) {
+                    if (convertedStyles.includes('모르겠음')) {
                         setDontKnowLook(true);
                     } else {
-                        // 기본 옵션에 있는 것과 없는 것(기타) 분리
-                        const standardLooks = backendLooks.filter((l: string) => lookOptions.includes(l));
-                        const customLooks = backendLooks.filter((l: string) => !lookOptions.includes(l));
+                        // 체크박스에 있는 것과 없는 것(기타) 분리
+                        const standardLooks = convertedStyles.filter((l: string) => lookOptions.includes(l));
+                        const customLooks = convertedStyles.filter((l: string) => !lookOptions.includes(l));
 
                         setPreferredLooks(standardLooks);
                         if (customLooks.length > 0) {
                             setIsOtherLookChecked(true);
-                            setOtherLook(customLooks.join(', ')); // 기타 내용 채우기
+                            setOtherLook(customLooks.join(', '));
                         }
                     }
+
+                    // 온보딩 데이터 처리 (기타 항목 분리 로직)
+                    const onboarding = data.onboarding || {};
+
+                    // // 룩 데이터 처리
+                    // const backendLooks = onboarding.styles || [];
+                    // if (backendLooks.includes('모르겠음')) {
+                    //     setDontKnowLook(true);
+                    // } else {
+                    //     // 기본 옵션에 있는 것과 없는 것(기타) 분리
+                    //     const standardLooks = backendLooks.filter((l: string) => lookOptions.includes(l));
+                    //     const customLooks = backendLooks.filter((l: string) => !lookOptions.includes(l));
+
+                    //     setPreferredLooks(standardLooks);
+                    //     if (customLooks.length > 0) {
+                    //         setIsOtherLookChecked(true);
+                    //         setOtherLook(customLooks.join(', ')); // 기타 내용 채우기
+                    //     }
+                    // }
 
                     // 색상 데이터 처리
                     const backendColors = onboarding.preferred_colors || [];
@@ -212,6 +238,8 @@ export default function MyPage() {
         } else if (dontKnowLook) {
             finalLooks = ['모르겠음'];
         }
+        // 한글 -> 영어 변환 (매핑 안 되면 그대로 보냄)
+        const finalLooksEn = finalLooks.map(l => lookMapReverse[l] || l);
 
         // 색상 데이터 합치기
         let finalColors = [...preferredColors];
@@ -232,7 +260,7 @@ export default function MyPage() {
             height_cm: Number(height) || null,
             weight_kg: Number(weight) || null,
             onboarding: {
-                styles: finalLooks,
+                styles: finalLooksEn,
                 preferred_colors: finalColors,
                 preferred_fits: finalFits
             }
@@ -240,7 +268,7 @@ export default function MyPage() {
 
         try {
             // API 호출
-            const res = await fetch('http://127.0.0.1:8000/account/info/', {
+            const res = await fetch('https://fit-me-up.p-e.kr/account/info/', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
