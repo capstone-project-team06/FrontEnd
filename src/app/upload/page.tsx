@@ -82,8 +82,7 @@ const categoryMap: { [key: string]: string } = {
 
     // 서브 카테고리 (아우터)
     '가디건': 'cardigan',
-    '데님 자켓': 'jacket',
-    '가죽 자켓': 'jacket',
+    '자켓': 'jacket',
     '패딩': 'parka',
     '코트': 'coat',
     '바람막이': 'windbreaker',
