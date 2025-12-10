@@ -4,8 +4,15 @@ import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 
+interface UploadBoxProps {
+    title: string;
+    file: File | null;
+    setFile: (file: File | null) => void;
+    onGuideClick: () => void; // ★ 추가된 부분
+}
+
 // ... (UploadBox 컴포넌트는 이전과 동일)
-function UploadBox({ title, file, setFile }) {
+function UploadBox({ title, file, setFile, onGuideClick }: UploadBoxProps) {
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +48,15 @@ function UploadBox({ title, file, setFile }) {
                 ) : (
                     <div className={styles.prompt}>
                         <p>이곳을 클릭하거나<br />사진을 드래그 앤 드롭하세요</p>
-                        <span className={styles.guidelineLink}>사진 가이드라인 보기</span>
+                        <span
+                            className={styles.guidelineLink}
+                            onClick={(e) => {
+                                e.stopPropagation(); // 중요: 부모의 click 이벤트(파일선택) 막기
+                                onGuideClick();      // 가이드라인 팝업 열기
+                            }}
+                        >
+                            사진 가이드라인 보기
+                        </span>
                     </div>
                 )}
             </div>
@@ -89,12 +104,46 @@ const categoryMap: { [key: string]: string } = {
     '블레이저': 'blazer',
 };
 
+function GuidelineModal({ type, onClose }: { type: 'face' | 'body'; onClose: () => void }) {
+    const isFace = type === 'face';
+
+    return (
+        <div className={styles.modalOverlay} onClick={onClose}>
+            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                <h3 className={styles.modalTitle}>
+                    {isFace ? '얼굴 사진 가이드라인' : '전신 사진 가이드라인'}
+                </h3>
+                <ul className={styles.modalList}>
+                    {isFace ? (
+                        <>
+                            <li>마스크나 선글라스를 벗고 <strong>정면</strong>을 응시해주세요.</li>
+                            <li><strong>조명이 밝은 곳</strong>에서 촬영된 선명한 사진이 좋습니다.</li>
+                            <li>얼굴이 너무 작게 나오거나 흔들린 사진은 피해주세요.</li>
+                            <li>본인의 피부톤과 얼굴형이 잘 드러나는 사진을 권장합니다.</li>
+                        </>
+                    ) : (
+                        <>
+                            <li>머리부터 발끝까지 나오는 <strong>전신 사진</strong>을 올려주세요.</li>
+                            <li>몸의 실루엣이 드러나는 옷(달라붙는 옷)을 입으면 분석이 더 정확합니다.</li>
+                            <li>두꺼운 패딩이나 코트는 체형 분석을 방해할 수 있습니다.</li>
+                            <li>바른 자세로 서서 정면을 보고 촬영해주세요.</li>
+                        </>
+                    )}
+                </ul>
+                <button className={styles.closeButton} onClick={onClose}>확인했습니다</button>
+            </div>
+        </div>
+    );
+}
+
 
 
 export default function UploadPage() {
     const router = useRouter();
     const [faceFile, setFaceFile] = useState<File | null>(null);
     const [bodyFile, setBodyFile] = useState<File | null>(null);
+
+    const [activeGuide, setActiveGuide] = useState<'face' | 'body' | null>(null);
 
     // State 변경: 선택 항목을 객체로 관리
     const [selectedItems, setSelectedItems] = useState<{ [key: string]: string | null }>({});
@@ -244,17 +293,17 @@ export default function UploadPage() {
             <div className={styles.contentWrapper}>
                 <h1 className={styles.pageTitle}>스타일 분석하기</h1>
                 <p className={styles.pageSubtitle}>
-                    사진을 올리고 원하는 옷 종류를 각각 선택해주세요.<br />
-                    AI가 당신에게 꼭 맞는 스타일을 찾아드릴게요.
+                    가이드라인에 맞게 사진을 올려주세요.<br />
+                    원하시는 옷 카테고리나 상황(장소)이 있다면 선택 및 입력해주세요.
                 </p>
 
                 <div className={styles.uploadArea}>
-                    <UploadBox title="얼굴 사진" file={faceFile} setFile={setFaceFile} />
-                    <UploadBox title="전신 사진" file={bodyFile} setFile={setBodyFile} />
+                    <UploadBox title="얼굴 사진" file={faceFile} setFile={setFaceFile} onGuideClick={() => setActiveGuide('face')} />
+                    <UploadBox title="전신 사진" file={bodyFile} setFile={setBodyFile} onGuideClick={() => setActiveGuide('body')} />
                 </div>
 
                 <div className={styles.selectionArea}>
-                    <h2 className={styles.selectionTitle}>1. 메인 카테고리 선택</h2>
+                    <h2 className={styles.selectionTitle}>1. 메인 카테고리</h2>
                     <p className={styles.selectionSubtitle}>분석을 원하는 카테고리를 모두 선택하세요.</p>
                     {/* mainTypeButtons 클래스 적용 */}
                     <div className={styles.mainTypeButtons}>
@@ -291,7 +340,7 @@ export default function UploadPage() {
 
                 {/* 상황 프롬프트 입력란 */}
                 <div className={styles.selectionArea}>
-                    <h2 className={styles.selectionTitle_Optional}>2. 상황 및 장소 (선택 사항)</h2>
+                    <h2 className={styles.selectionTitle_Optional}>2. 상황 및 장소</h2>
                     <p className={styles.selectionSubtitle}>추천받고 싶은 특정 상황이나 장소를 입력하세요.</p>
                     <input
                         type="text"
@@ -317,6 +366,13 @@ export default function UploadPage() {
                     {isLoading ? '분석 중...' : '분석 시작하기'}
                 </button>
             </div>
+
+            {activeGuide && (
+                <GuidelineModal
+                    type={activeGuide}
+                    onClose={() => setActiveGuide(null)}
+                />
+            )}
         </main>
     );
 }

@@ -101,7 +101,7 @@ function ResultsContent() {
         return (
             <main className={styles.mainContainer}>
                 <div className={styles.loadingBox}>
-                    <h2>AI가 스타일을 분석 중입니다...</h2>
+                    <h2>스타일을 분석 중입니다...</h2>
                     <p>잠시만 기다려주세요.</p>
                 </div>
             </main>
@@ -185,7 +185,7 @@ function ResultsContent() {
     return (
         <main className={styles.mainContainer}>
             <div className={styles.contentWrapper}>
-                <h1 className={styles.pageTitle}>AI 스타일 분석 결과</h1>
+                <h1 className={styles.pageTitle}>스타일 분석 결과</h1>
 
                 {/* 1. 분석 요약 */}
                 <div className={styles.summaryBox}>
