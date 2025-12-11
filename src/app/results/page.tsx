@@ -192,9 +192,9 @@ function ResultsContent() {
                     <p>
                         {'회원님은 '}
                         <strong>{getDisplayValue(analysisResult.faceShape)}</strong>
-                        {'얼굴과 '}
+                        {' 얼굴과 '}
                         <strong>{getDisplayValue(analysisResult.bodyShape)}</strong>
-                        {'체형을 가지셨으며, '}
+                        {' 체형을 가지셨으며, '}
                         <strong>{getDisplayValue(analysisResult.personalColor)}</strong>
                         {'에 가장 잘 어울리는 스타일을 추천해 드려요.'}
                     </p>
@@ -268,7 +268,7 @@ function ResultsContent() {
                                 </div>
                                 <div className={styles.cardContent}>
                                     <h3 className={styles.cardTitle}>{item.name}</h3>
-                                    <p className={styles.similarityText}>유사도: {(item.similarity * 100).toFixed(1)}%</p>
+                                    {/* <p className={styles.similarityText}>유사도: {(item.similarity * 100).toFixed(1)}%</p> */}
                                     <span className={styles.shopNow}>구매하러 가기 &rarr;</span>
                                 </div>
                             </a>
