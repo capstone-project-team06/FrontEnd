@@ -139,14 +139,14 @@ function ResultsContent() {
         'triangle': '삼각형',
         'hourglass': '모래시계형',
         'rectangle': '직사각형',
-        'balanced': '균형 잡힌 체형',
+        'balanced': '균형 잡힌',
 
         // --- 얼굴형 (Face Shape) ---
         'oval': '계란형',
         'round': '둥근형',
         'square': '각진형(사각형)',
         'heart': '하트형',
-        'oblong': '긴 얼굴형',
+        'oblong': '긴',
 
         // --- 피부톤 조합 (Skin Depth + Undertone) ---
         // Light (밝은)
@@ -192,9 +192,9 @@ function ResultsContent() {
                     <p>
                         {'회원님은 '}
                         <strong>{getDisplayValue(analysisResult.faceShape)}</strong>
-                        {'과 '}
+                        {'얼굴과 '}
                         <strong>{getDisplayValue(analysisResult.bodyShape)}</strong>
-                        {'을 가지셨으며, '}
+                        {'체형을 가지셨으며, '}
                         <strong>{getDisplayValue(analysisResult.personalColor)}</strong>
                         {'에 가장 잘 어울리는 스타일을 추천해 드려요.'}
                     </p>
