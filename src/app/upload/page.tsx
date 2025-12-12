@@ -229,36 +229,32 @@ export default function UploadPage() {
                 });
 
             // 메인 카테고리가 있을 때만 API 호출 (없으면 건너뜀)
-            if (mainCatsArray.length > 0) {
 
-                const preferenceBody = {
-                    main_categories: mainCatsArray,
-                    sub_categories: subCatsArray,
-                    situation: situationPrompt
-                };
+            const preferenceBody = {
+                main_categories: mainCatsArray,
+                sub_categories: subCatsArray,
+                situation: situationPrompt
+            };
 
-                console.log("온보딩 전송 데이터:", preferenceBody);
+            console.log("온보딩 전송 데이터:", preferenceBody);
 
-                const prefRes = await fetch('https://fit-me-up.p-e.kr/recommendation/requests/', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(preferenceBody),
-                });
+            const prefRes = await fetch('https://fit-me-up.p-e.kr/recommendation/requests/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(preferenceBody),
+            });
 
-                if (!prefRes.ok) {
-                    // 선택을 했는데 에러가 난 경우는 로그만 찍고 넘어감 (사용자를 막지 않음)
-                    const err = await prefRes.json();
-                    console.error('온보딩 저장 실패 (무시하고 진행):', err);
-                } else {
-                    console.log('온보딩 정보 저장 완료');
-                }
-
+            if (!prefRes.ok) {
+                // 선택을 했는데 에러가 난 경우는 로그만 찍고 넘어감 (사용자를 막지 않음)
+                const err = await prefRes.json();
+                console.error('온보딩 저장 실패 (무시하고 진행):', err);
             } else {
-                console.log("카테고리 선택이 없어 온보딩 저장을 건너뜁니다.");
+                console.log('온보딩 정보 저장 완료');
             }
+
 
 
             // 결과 페이지로 데이터 전달 및 이동

@@ -123,7 +123,9 @@ function ResultsContent() {
     const { matched_celebrity, user_analysis, summary, recommendations, needs } = recommendationData;
 
     // 추천 아이템 리스트 평탄화 (모든 카테고리의 아이템을 하나의 리스트로)
-    const allRecommendedItems = recommendations.flatMap(rec => rec.items);
+    // const allRecommendedItems = recommendations.flatMap(rec => rec.items);
+
+
 
     // API의 분석 결과를 사용
     const analysisResult = {
@@ -257,26 +259,44 @@ function ResultsContent() {
                 </div> */}
 
                 {/* 3. 추천 아이템 그리드 */}
-                <h2 className={styles.gridTitle}>추천 아이템</h2>
+                {/* <h2 className={styles.gridTitle}>추천 아이템</h2> */}
 
-                <div className={styles.resultsGrid}>
-                    {allRecommendedItems.map((item) => (
-                        <div key={item.name + item.shop_link} className={styles.card}>
-                            <a href={item.shop_link} target="_blank" rel="noopener noreferrer" className={styles.cardLink}>
-                                <div className={styles.imageContainer}>
-                                    <img src={item.image_url} alt={item.name} className={styles.cardImage} />
-                                </div>
-                                <div className={styles.cardContent}>
-                                    <h3 className={styles.cardTitle}>{item.name}</h3>
-                                    {/* <p className={styles.similarityText}>유사도: {(item.similarity * 100).toFixed(1)}%</p> */}
-                                    <span className={styles.shopNow}>구매하러 가기 &rarr;</span>
-                                </div>
-                            </a>
+                {recommendations.map((group, groupIndex) => {
+                    // 해당 카테고리에 아이템이 없으면 렌더링하지 않음
+                    if (group.items.length === 0) return null;
+
+                    return (
+                        <div key={group.category + groupIndex} className={styles.categoryGroup}>
+                            {/* 카테고리 제목 (예: 상의 추천) */}
+                            <h2 className={styles.gridTitle}>
+                                {getDisplayValue(group.category)} 추천
+                            </h2>
+
+                            {/* 해당 카테고리의 아이템 그리드 */}
+                            <div className={styles.resultsGrid}>
+                                {group.items.map((item, idx) => (
+                                    <div key={`${item.name}-${idx}`} className={styles.card}>
+                                        <a href={item.shop_link} target="_blank" rel="noopener noreferrer" className={styles.cardLink}>
+                                            <div className={styles.imageContainer}>
+                                                <img src={item.image_url} alt={item.name} className={styles.cardImage} />
+                                            </div>
+                                            <div className={styles.cardContent}>
+                                                <h3 className={styles.cardTitle}>{item.name}</h3>
+                                                <p className={styles.similarityText}>
+                                                    {/* 유사도: {item.similarity > 1 ? item.similarity : (item.similarity * 100).toFixed(1)}% */}
+                                                </p>
+                                                <span className={styles.shopNow}>구매하러 가기 &rarr;</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    ))}
-                </div>
+                    );
+                })}
 
-                {allRecommendedItems.length === 0 && (
+                {/* 전체 추천 아이템이 하나도 없을 경우 */}
+                {recommendations.every(r => r.items.length === 0) && (
                     <p className={styles.noResults}>현재 조건에 맞는 추천 아이템이 없습니다.</p>
                 )}
 
