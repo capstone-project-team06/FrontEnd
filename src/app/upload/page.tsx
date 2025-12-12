@@ -153,7 +153,7 @@ export default function UploadPage() {
 
     // 버튼 활성화 조건: 최소 1개의 서브 카테고리가 선택되었는지 확인
     // const isSelectionMade = Object.values(selectedItems).some(subCat => subCat !== null);
-    const isButtonDisabled = !faceFile || !bodyFile || isLoading;
+    const isButtonDisabled = !faceFile || !bodyFile || isLoading || Object.keys(selectedItems).length === 0;
 
     // 메인 카테고리 토글(On/Off) 핸들러
     const handleMainCategoryToggle = (category: string) => {
