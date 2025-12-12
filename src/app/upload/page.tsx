@@ -66,7 +66,7 @@ function UploadBox({ title, file, setFile, onGuideClick }: UploadBoxProps) {
 
 // 옷 종류 데이터 구조
 const clothingData = {
-    '상의': ['반팔티', '맨투맨', '니트', '셔츠', '후드티', '민소매'],
+    '상의': ['티셔츠', '맨투맨', '니트', '셔츠', '후드티', '민소매'],
     '하의': ['스웨트 팬츠', '데님 팬츠', '슬랙스', '카고 팬츠'],
     '아우터': ['가디건', '자켓', '패딩', '코트', '바람막이', '블레이저']
 };
@@ -82,7 +82,7 @@ const categoryMap: { [key: string]: string } = {
     '아우터': 'outer',
 
     // 서브 카테고리 (상의)
-    '반팔티': 'tshirt',
+    '티셔츠': 'tshirt',
     '맨투맨': 'sweatshirt',
     '니트': 'knit',
     '셔츠': 'shirt',
